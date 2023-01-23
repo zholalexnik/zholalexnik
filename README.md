@@ -1,5 +1,5 @@
 ### Hi there 👋
-#HELLO GIT
+# HELLO GIT
 <!--
 **zholalexnik/zholalexnik** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
