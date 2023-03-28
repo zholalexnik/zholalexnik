@@ -17,6 +17,8 @@
     document.getElementById("digital_watch").innerHTML = hours + ":" + minutes + ":" + seconds;
     setTimeout("digitalWatch()", 1000);
   }
+  function Oblicz(Obiekt) 
+	{Obiekt.Wynik.value = eval(Obiekt.expr.value)}
 </script>
 </head>
 <body onload="digitalWatch()">
