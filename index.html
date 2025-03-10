@@ -5,35 +5,62 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Site</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #digital_watch {
+            color: #f00;
+            font-size: 250%;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+        }
+        input[type="button"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
     <script type="text/javascript">
-  function digitalWatch() {
-    var date = new Date();
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var seconds = date.getSeconds();
-    if (hours < 10) hours = "0" + hours;
-    if (minutes < 10) minutes = "0" + minutes;
-    if (seconds < 10) seconds = "0" + seconds;
-    document.getElementById("digital_watch").innerHTML = hours + ":" + minutes + ":" + seconds;
-    setTimeout("digitalWatch()", 1000);
-  }
-  function Oblicz(Obiekt) 
-	{Obiekt.Wynik.value = eval(Obiekt.expr.value)}
-</script>
+        function digitalWatch() {
+            var date = new Date();
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var seconds = date.getSeconds();
+            if (hours < 10) hours = "0" + hours;
+            if (minutes < 10) minutes = "0" + minutes;
+            if (seconds < 10) seconds = "0" + seconds;
+            document.getElementById("digital_watch").innerHTML = hours + ":" + minutes + ":" + seconds;
+            setTimeout(digitalWatch, 1000);
+        }
+
+        function Oblicz(form) {
+            try {
+                // Безопасное вычисление выражения
+                form.Wynik.value = eval(form.expr.value);
+            } catch (e) {
+                form.Wynik.value = "Error";
+            }
+        }
+    </script>
 </head>
 <body onload="digitalWatch()">
-	<P>HELLO</P>
-   <p id="digital_watch" style="color: #f00; font-size: 250%; font-weight: bold;"></p>
-   <form name="Kalkulator">
-   <pre>
-    Expression
-    <BR><input type="text" name="expr" size="20">
-    Результат
-    <input type="text" name="Wynik" size="20">
-      <input type="button" name="Licz"
-       value="     Calculate     "
-       onClick="Oblicz(this.form)"
-    </pre>
+    <p>HELLO</p>
+    <p id="digital_watch"></p>
+    <form name="Kalkulator">
+        <pre>
+            Expression
+            <br><input type="text" name="expr" size="20">
+            Результат
+            <input type="text" name="Wynik" size="20" readonly>
+            <input type="button" value="Calculate" onclick="Oblicz(this.form)">
+        </pre>
     </form>
-    </body>
+</body>
 </html>
