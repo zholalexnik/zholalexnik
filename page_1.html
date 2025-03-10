@@ -1,1 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moving Ball</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+        #ball {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: red;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div id="ball"></div>
 
+    <script>
+        // Получаем элемент шарика
+        const ball = document.getElementById('ball');
+
+        // Начальные координаты шарика
+        let x = 0;
+        let y = 0;
+
+        // Скорость движения шарика
+        let dx = 2;
+        let dy = 2;
+
+        // Функция для обновления позиции шарика
+        function updateBallPosition() {
+            // Получаем размеры окна браузера
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+
+            // Обновляем координаты шарика
+            x += dx;
+            y += dy;
+
+            // Проверяем столкновение с границами окна
+            if (x + ball.offsetWidth > windowWidth || x < 0) {
+                dx = -dx; // Меняем направление по горизонтали
+            }
+            if (y + ball.offsetHeight > windowHeight || y < 0) {
+                dy = -dy; // Меняем направление по вертикали
+            }
+
+            // Устанавливаем новую позицию шарика
+            ball.style.left = x + 'px';
+            ball.style.top = y + 'px';
+
+            // Рекурсивно вызываем функцию для создания анимации
+            requestAnimationFrame(updateBallPosition);
+        }
+
+        // Запускаем анимацию
+        updateBallPosition();
+    </script>
+</body>
+</html>
