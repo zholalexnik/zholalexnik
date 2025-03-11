@@ -3,65 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moving Ball</title>
+    <title>Расчет сечения кабеля</title>
     <style>
         body {
-            margin: 0;
-            overflow: hidden;
-            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
         }
-        #ball {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background-color: red;
-            border-radius: 50%;
+        h1 {
+            color: #333;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div id="ball"></div>
+    <div class="container">
+        <h1>Расчет сечения кабеля</h1>
+        <form id="cableForm">
+            <label for="current">Ток нагрузки (I), А:</label>
+            <input type="number" id="current" step="0.1" required>
+
+            <label for="length">Длина кабеля (L), м:</label>
+            <input type="number" id="length" step="0.1" required>
+
+            <label for="material">Материал кабеля:</label>
+            <select id="material" required>
+                <option value="0.0175">Медь</option>
+                <option value="0.028">Алюминий</option>
+            </select>
+
+            <label for="voltageDrop">Допустимое падение напряжения (U), В:</label>
+            <input type="number" id="voltageDrop" step="0.1" required>
+
+            <button type="button" onclick="calculate()">Рассчитать</button>
+        </form>
+
+        <div class="result" id="result"></div>
+    </div>
 
     <script>
-        // Получаем элемент шарика
-        const ball = document.getElementById('ball');
+        function calculate() {
+            // Получаем значения из формы
+            const current = parseFloat(document.getElementById('current').value);
+            const length = parseFloat(document.getElementById('length').value);
+            const material = parseFloat(document.getElementById('material').value);
+            const voltageDrop = parseFloat(document.getElementById('voltageDrop').value);
 
-        // Начальные координаты шарика
-        let x = 0;
-        let y = 0;
-
-        // Скорость движения шарика
-        let dx = 2;
-        let dy = 2;
-
-        // Функция для обновления позиции шарика
-        function updateBallPosition() {
-            // Получаем размеры окна браузера
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
-
-            // Обновляем координаты шарика
-            x += dx;
-            y += dy;
-
-            // Проверяем столкновение с границами окна
-            if (x + ball.offsetWidth > windowWidth || x < 0) {
-                dx = -dx; // Меняем направление по горизонтали
-            }
-            if (y + ball.offsetHeight > windowHeight || y < 0) {
-                dy = -dy; // Меняем направление по вертикали
+            // Проверяем, что все поля заполнены
+            if (isNaN(current) || isNaN(length) || isNaN(voltageDrop)) {
+                alert("Пожалуйста, заполните все поля корректно.");
+                return;
             }
 
-            // Устанавливаем новую позицию шарика
-            ball.style.left = x + 'px';
-            ball.style.top = y + 'px';
+            // Вычисляем сечение кабеля
+            const section = (current * length * material) / voltageDrop;
 
-            // Рекурсивно вызываем функцию для создания анимации
-            requestAnimationFrame(updateBallPosition);
+            // Выводим результат
+            document.getElementById('result').innerHTML = `Необходимое сечение кабеля: <strong>${section.toFixed(2)} мм²</strong>`;
         }
-
-        // Запускаем анимацию
-        updateBallPosition();
     </script>
 </body>
 </html>
