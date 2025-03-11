@@ -72,6 +72,19 @@
             <label for="voltageDrop">Допустимое падение напряжения (U), В:</label>
             <input type="number" id="voltageDrop" step="0.1" required>
 
+            <label for="loadType">Тип нагрузки:</label>
+            <select id="loadType" required>
+                <option value="1">Однофазная</option>
+                <option value="1.732">Трехфазная</option>
+            </select>
+
+            <label for="installation">Способ прокладки кабеля:</label>
+            <select id="installation" required>
+                <option value="1">В воздухе</option>
+                <option value="0.9">В земле</option>
+                <option value="0.8">В трубе</option>
+            </select>
+
             <button type="button" onclick="calculate()">Рассчитать</button>
         </form>
 
@@ -85,6 +98,8 @@
             const length = parseFloat(document.getElementById('length').value);
             const material = parseFloat(document.getElementById('material').value);
             const voltageDrop = parseFloat(document.getElementById('voltageDrop').value);
+            const loadType = parseFloat(document.getElementById('loadType').value);
+            const installation = parseFloat(document.getElementById('installation').value);
 
             // Проверяем, что все поля заполнены
             if (isNaN(current) || isNaN(length) || isNaN(voltageDrop)) {
@@ -92,8 +107,8 @@
                 return;
             }
 
-            // Вычисляем сечение кабеля
-            const section = (current * length * material) / voltageDrop;
+            // Вычисляем сечение кабеля с учетом типа нагрузки и способа прокладки
+            const section = (current * length * material * loadType) / (voltageDrop * installation);
 
             // Выводим результат
             document.getElementById('result').innerHTML = `Необходимое сечение кабеля: <strong>${section.toFixed(2)} мм²</strong>`;
