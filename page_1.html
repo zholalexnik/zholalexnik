@@ -51,14 +51,34 @@
             font-weight: bold;
             text-align: center;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Расчет сечения кабеля</h1>
         <form id="cableForm">
-            <label for="current">Ток нагрузки (I), А:</label>
-            <input type="number" id="current" step="0.1" required>
+            <label for="calculationType">Тип расчета:</label>
+            <select id="calculationType" onchange="toggleInputs()" required>
+                <option value="current">По току</option>
+                <option value="power">По мощности</option>
+            </select>
+
+            <div id="currentInput">
+                <label for="current">Ток нагрузки (I), А:</label>
+                <input type="number" id="current" step="0.1">
+            </div>
+
+            <div id="powerInput" class="hidden">
+                <label for="power">Мощность (P), Вт:</label>
+                <input type="number" id="power" step="0.1">
+                <label for="voltage">Напряжение (U), В:</label>
+                <input type="number" id="voltage" step="0.1">
+                <label for="powerFactor">Коэффициент мощности (cos φ):</label>
+                <input type="number" id="powerFactor" step="0.1" value="0.9">
+            </div>
 
             <label for="length">Длина кабеля (L), м:</label>
             <input type="number" id="length" step="0.1" required>
@@ -92,9 +112,46 @@
     </div>
 
     <script>
+        // Переключение между вводом тока и мощности
+        function toggleInputs() {
+            const calculationType = document.getElementById('calculationType').value;
+            const currentInput = document.getElementById('currentInput');
+            const powerInput = document.getElementById('powerInput');
+
+            if (calculationType === 'current') {
+                currentInput.classList.remove('hidden');
+                powerInput.classList.add('hidden');
+            } else {
+                currentInput.classList.add('hidden');
+                powerInput.classList.remove('hidden');
+            }
+        }
+
+        // Функция для расчета тока по мощности
+        function calculateCurrentFromPower(power, voltage, powerFactor) {
+            return power / (voltage * powerFactor);
+        }
+
+        // Основная функция расчета
         function calculate() {
-            // Получаем значения из формы
-            const current = parseFloat(document.getElementById('current').value);
+            const calculationType = document.getElementById('calculationType').value;
+            let current;
+
+            if (calculationType === 'current') {
+                current = parseFloat(document.getElementById('current').value);
+            } else {
+                const power = parseFloat(document.getElementById('power').value);
+                const voltage = parseFloat(document.getElementById('voltage').value);
+                const powerFactor = parseFloat(document.getElementById('powerFactor').value);
+
+                if (isNaN(power) || isNaN(voltage) || isNaN(powerFactor)) {
+                    alert("Пожалуйста, заполните все поля корректно.");
+                    return;
+                }
+
+                current = calculateCurrentFromPower(power, voltage, powerFactor);
+            }
+
             const length = parseFloat(document.getElementById('length').value);
             const material = parseFloat(document.getElementById('material').value);
             const voltageDrop = parseFloat(document.getElementById('voltageDrop').value);
@@ -107,12 +164,15 @@
                 return;
             }
 
-            // Вычисляем сечение кабеля с учетом типа нагрузки и способа прокладки
+            // Вычисляем сечение кабеля
             const section = (current * length * material * loadType) / (voltageDrop * installation);
 
             // Выводим результат
             document.getElementById('result').innerHTML = `Необходимое сечение кабеля: <strong>${section.toFixed(2)} мм²</strong>`;
         }
+
+        // Инициализация при загрузке страницы
+        toggleInputs();
     </script>
 </body>
 </html>
